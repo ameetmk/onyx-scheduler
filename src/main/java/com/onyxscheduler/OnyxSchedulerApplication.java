@@ -70,7 +70,8 @@ public class OnyxSchedulerApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			
-			http.authorizeRequests().antMatchers(HttpMethod.OPTIONS,"/*").permitAll().and().csrf().disable();
+			http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.OPTIONS,"/**").permitAll()//allow CORS option calls
+		     .anyRequest().authenticated().and().httpBasic().realmName("Onyx Authentication");
 		}
 	}
 }
