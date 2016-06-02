@@ -153,43 +153,6 @@
                       <label>Job Name:</label>
                       <input type="text" name="jobName" id="jobName" class="form-control" placeholder="Enter Job Name...">
                     </div>
-                    <div class="form-group">
-                      <label>Audit Log URL:</label>
-                      <input type="text" name="auditUrl" id="auditUrl" class="form-control" placeholder="Enter Audit Log URL...">
-                    </div>
-                    <div class="form-group" id="auditHeaders" style="display: none;">
-                      <label>Audit Log Headers:</label>
-                      <table class="table table-bordered" id="auditTable">
-                        <thead>
-                          <tr>
-                            <th>Header Key</th>
-                            <th class="lastChild text-center">&nbsp;</th>
-                            <th>Header Value</th>
-                            <th class="lastChild">
-                              <a class="text-center" onclick="addHeaders(this);"><i class="fa fa-plus"></i></a>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td><input type="text" class="form-control headerKey" required></td>
-                            <td class="lastChild text-center">:</td>
-                            <td><input type="text" class="form-control headerValue" required></td>
-                            <td class="lastChild">
-                              <a class="text-center" onclick="removeHeaders(this);"><i class="fa fa-close"></i></a>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div class="form-group">
-                      <label>Max Trail:</label>
-                      <input type="number" name="maxTrail" id="maxTrail" class="form-control" placeholder="Enter Max Try...">
-                    </div>
-                    <div class="form-group">
-                      <label>Next Job ID:</label>
-                      <input type="text" name="njID" id="njID" class="form-control" placeholder="Enter Next Job ID...">
-                    </div>
                     <div class="row">
                       <div class="col-sm-6">
                         <div class="form-group">
@@ -197,7 +160,6 @@
                           <select name="type" id="type" class="form-control">
                             <option value="">-- Select --</option>
                             <option value="1">http</option>
-                            <option value="2">https</option>
                           </select>
                         </div>
                       </div>
@@ -233,9 +195,9 @@
                         </thead>
                         <tbody>
                           <tr>
-                            <td><input type="text" class="form-control headerKey" required></td>
+                            <td><input type="text" class="form-control headerKey"></td>
                             <td class="lastChild text-center">:</td>
-                            <td><input type="text" class="form-control headerValue" required></td>
+                            <td><input type="text" class="form-control headerValue"></td>
                             <td class="lastChild">
                               <a class="text-center" onclick="removeHeaders(this);"><i class="fa fa-close"></i></a>
                             </td>
@@ -271,6 +233,43 @@
                         <input type="text" name="when" id="when" class="form-control pull-right">
                       </div>
                       <!-- /.input group -->
+                    </div>
+                    <div class="form-group">
+                      <label>Audit Log URL:</label>
+                      <input type="text" name="auditUrl" id="auditUrl" class="form-control" placeholder="Enter Audit Log URL...">
+                    </div>
+                    <div class="form-group" id="auditHeaders" style="display: none;">
+                      <label>Audit Log Headers:</label>
+                      <table class="table table-bordered" id="auditTable">
+                        <thead>
+                          <tr>
+                            <th>Header Key</th>
+                            <th class="lastChild text-center">&nbsp;</th>
+                            <th>Header Value</th>
+                            <th class="lastChild">
+                              <a class="text-center" onclick="addAuditHeaders(this);"><i class="fa fa-plus"></i></a>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><input type="text" class="form-control headerKey"></td>
+                            <td class="lastChild text-center">:</td>
+                            <td><input type="text" class="form-control headerValue"></td>
+                            <td class="lastChild">
+                              <a class="text-center" onclick="removeAuditHeaders(this);"><i class="fa fa-close"></i></a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="form-group">
+                      <label>Max Trail:</label>
+                      <input type="number" name="maxTrail" id="maxTrail" class="form-control" placeholder="Enter Max Trail...">
+                    </div>
+                    <div class="form-group">
+                      <label>Next Job ID:</label>
+                      <input type="text" name="njID" id="njID" class="form-control" placeholder="Enter Next Job ID...">
                     </div>
                   </div>
                   <!-- /.box-body -->
