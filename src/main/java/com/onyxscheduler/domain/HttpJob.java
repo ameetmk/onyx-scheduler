@@ -163,6 +163,10 @@ public class HttpJob extends Job {
   @SuppressWarnings("unchecked")
   @JsonIgnore
   public void setAuditHeadersJson(String json) {
+    if(json == null) {
+      return;
+    }
+
     try {
       auditHeaders = jsonMapper.readValue(json, Map.class);
     } catch (IOException e) {
@@ -249,7 +253,15 @@ public class HttpJob extends Job {
     setHeadersJson((String) dataMap.get(HEADERS_JSON_DATAMAP_KEY));
     setAuditHeadersJson((String) dataMap.get(AUDIT_HEADERS));
     nextJobId = (String) dataMap.get(NEXT_JOB_ID);
-    maxTrial= (Integer.valueOf(dataMap.get(MAX_TRIAL).toString()));
+
+    if(null != dataMap.get(MAX_TRIAL)) {
+      try {
+    	  maxTrial= (Integer.valueOf(dataMap.get(MAX_TRIAL).toString()));  
+      }catch(Exception e) {
+    	  // eat this exception and set maxTrial to 1
+    	  maxTrial = 1;
+      }
+    }
   }
 
   @Override

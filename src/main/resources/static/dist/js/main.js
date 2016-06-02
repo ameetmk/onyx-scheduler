@@ -1,5 +1,5 @@
-var SERVER_URL = "http://192.168.10.128:8080/";
-// var SERVER_URL = "/";
+//var SERVER_URL = "http://192.168.10.128:8080/";
+var SERVER_URL = "/";
 
 //Make sure jQuery has been loaded before main.js
 if (typeof jQuery === "undefined") {
