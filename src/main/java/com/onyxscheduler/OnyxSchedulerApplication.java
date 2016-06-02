@@ -26,6 +26,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +46,7 @@ public class OnyxSchedulerApplication {
   public static void main(String[] args) {
     SpringApplication.run(OnyxSchedulerApplication.class, args);
   }
+  
 
   /* since there is no way to set serializationInclusion through spring boot application.yml we
   need to define a custom object mapper, and due to this all other spring boot jackson settings
