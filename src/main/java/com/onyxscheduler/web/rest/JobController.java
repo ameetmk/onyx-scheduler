@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.onyxscheduler.web;
+package com.onyxscheduler.web.rest;
 
 import com.onyxscheduler.domain.Job;
 import com.onyxscheduler.domain.JobKey;
