@@ -295,28 +295,37 @@ public class HttpJob extends Job {
 			makeRequest(++trialCount);
 		}
 
-		int code = response.getStatusCode().value();
-		if(code < 200 || code > 205)
+		if(response != null)
+		{
+			
+			if(! response.getStatusCode().is2xxSuccessful())
+			{
+				makeRequest(++trialCount);
+			}
+			
+			String responseBody = response.getBody();
+	
+			HttpAuditRecord httpAuditRecord = new HttpAuditRecord(this, response.getStatusCode().value(), responseBody, startTime, new Date(), trialCount);
+	
+			LOG.info("{}", httpAuditRecord);
+			if(auditUrl != null)
+			{
+				HttpHeaders httpAuditHeaders = new HttpHeaders();
+				auditHeaders.forEach(httpAuditHeaders::add);
+		
+				try {
+						jsonMapper.setVisibility(PropertyAccessor.ALL,Visibility.ANY);
+						HttpEntity<String> auditRequest = new HttpEntity<>(jsonMapper.writeValueAsString(httpAuditRecord), httpHeaders);
+						restTemplate.exchange(auditUrl.toURI(),HttpMethod.POST,auditRequest, String.class);
+				} catch (Exception e) {
+					LOG.error("Error Logging Audit Record to Log Server Endpoint", e);
+				}
+			}
+		}
+		
+		else
 		{
 			makeRequest(++trialCount);
-		}
-		String responseBody = response.getBody();
-
-		HttpAuditRecord httpAuditRecord = new HttpAuditRecord(this, code, responseBody, startTime, new Date(), trialCount);
-
-		LOG.info("{}", httpAuditRecord);
-		if(auditUrl != null)
-		{
-			HttpHeaders httpAuditHeaders = new HttpHeaders();
-			auditHeaders.forEach(httpAuditHeaders::add);
-	
-			try {
-					jsonMapper.setVisibility(PropertyAccessor.ALL,Visibility.ANY);
-					HttpEntity<String> auditRequest = new HttpEntity<>(jsonMapper.writeValueAsString(httpAuditRecord), httpHeaders);
-					restTemplate.exchange(auditUrl.toURI(),HttpMethod.POST,auditRequest, String.class);
-			} catch (Exception e) {
-				LOG.error("Error Logging Audit Record to Log Server Endpoint", e);
-			}
 		}
 	}
 
