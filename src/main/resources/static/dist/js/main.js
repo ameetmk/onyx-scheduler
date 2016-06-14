@@ -349,21 +349,24 @@ function deleteJob(param, event) {
   event.stopPropagation();
   var gName = $(param).closest('tr').find('.gName').html(),
       jName = $(param).closest('tr').find('.jName').html();
-  $.ajax({
-    url: SERVER_URL + 'onyx/groups/' + gName + '/jobs/' + jName,
-    type: 'DELETE',
-    headers: {
-      "Accept": "application/json",
-      "Authorization": "Basic YWRtaW46YWRtaW4=",
-      "Content-Type": "application/json"
-    },
-    success: function(data, status, xhr) {
-      location.reload();
-    },
-    error: function(xhr, status, err) {
-
-    }
-  });
+  if(confirm("Are you want to delete this task ?"))
+  {
+	  $.ajax({
+	    url: SERVER_URL + 'onyx/groups/' + gName + '/jobs/' + jName,
+	    type: 'DELETE',
+	    headers: {
+	      "Accept": "application/json",
+	      "Authorization": "Basic YWRtaW46YWRtaW4=",
+	      "Content-Type": "application/json"
+	    },
+	    success: function(data, status, xhr) {
+	      location.reload();
+	    },
+	    error: function(xhr, status, err) {
+	
+	    }
+	  });
+  }
 }
 function addAuditHeaders(param) {
   if ($('#auditTable>tbody>tr:first-child').find('.headerKey').val() == '' || $('#auditTable>tbody>tr:first-child').find('.headerValue').val() == '') {
