@@ -16,12 +16,6 @@
 
 package com.onyxscheduler;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -34,16 +28,35 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
+
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import static com.google.common.collect.Lists.newArrayList;
 
 @Configuration
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 @ComponentScan
+@EnableSwagger2
 public class OnyxSchedulerApplication {
 
   public static void main(String[] args) {
     SpringApplication.run(OnyxSchedulerApplication.class, args);
   }
+  
 
   /* since there is no way to set serializationInclusion through spring boot application.yml we
   need to define a custom object mapper, and due to this all other spring boot jackson settings
@@ -70,7 +83,38 @@ public class OnyxSchedulerApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			
-			http.authorizeRequests().antMatchers(HttpMethod.OPTIONS,"/*").permitAll().and().csrf().disable();
+			http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.OPTIONS,"/**").permitAll()//allow CORS option calls
+		     .anyRequest().authenticated().and().httpBasic().realmName("Onyx Authentication");
 		}
 	}
+  	
+  	@Bean
+  	public Docket jobSchedulerApi()
+  	{
+
+  			return new Docket(DocumentationType.SWAGGER_2)
+  					.select()
+  					.apis(RequestHandlerSelectors.basePackage("com.onyxscheduler.web.rest"))
+  					.build()
+  					.apiInfo(apiInfo())
+  					.useDefaultResponseMessages(false)
+  					.globalResponseMessage(
+  							RequestMethod.GET,
+  							newArrayList(
+  									new ResponseMessageBuilder().code(500)
+  											.message("500 message")
+  											.responseModel(new ModelRef("Error"))
+  											.build(), new ResponseMessageBuilder()
+  											.code(403).message("Forbidden!!!!!")
+  											.build()));
+  	}
+  		
+  		private ApiInfo apiInfo() {
+  			ApiInfo apiInfo = new ApiInfo("Onyx Job Scheduling Api",
+  					"This api provide rest service of Onyx", "1.0", "",
+  					new Contact("", "", ""),
+  					"", "");
+  			return apiInfo;
+  		}
+  		
 }

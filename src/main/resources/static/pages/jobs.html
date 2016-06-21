@@ -14,26 +14,26 @@
     <link rel="icon" type="image/x-icon" href="../dist/img/favicon.ico">
     <link rel="shortcut icon" href="../dist/img/favicon.ico">
     <!-- jQueryUI 1.11.4 -->
-    <link rel="stylesheet" href="../plugins/jQueryUI/jquery-ui.css">
+    <link rel="stylesheet" href="/webjars/jquery-ui/1.11.4/jquery-ui.css">
     <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/webjars/adminlte/2.3.3/bootstrap/css/bootstrap.min.css" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <!-- DataTables -->
-    <link rel="stylesheet" href="../plugins/datatables/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="/webjars/adminlte/2.3.3/plugins/datatables/dataTables.bootstrap.css">
     <!-- DateTimePicker -->
     <link rel="stylesheet" href="../plugins/datetimepicker/css/bootstrap-datetimepicker.min.css">
     <!-- jQueryCron -->
     <link rel="stylesheet" href="../plugins/jquery-cron/jquery-cron.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+    <!-- Theme style-->
+    <link rel="stylesheet" href="/webjars/adminlte/2.3.3/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
       page. However, you can choose any other skin. Make sure you
       apply the skin class to the body tag so the changes take effect.
       -->
-    <link rel="stylesheet" href="../dist/css/skins/skin-blue.min.css">
+    <link rel="stylesheet" href="/webjars/adminlte/2.3.3/dist/css/skins/skin-blue.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../dist/css/main.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -153,43 +153,6 @@
                       <label>Job Name:</label>
                       <input type="text" name="jobName" id="jobName" class="form-control" placeholder="Enter Job Name...">
                     </div>
-                    <div class="form-group">
-                      <label>Audit Log URL:</label>
-                      <input type="text" name="auditUrl" id="auditUrl" class="form-control" placeholder="Enter Audit Log URL...">
-                    </div>
-                    <div class="form-group" id="auditHeaders" style="display: none;">
-                      <label>Audit Log Headers:</label>
-                      <table class="table table-bordered" id="auditTable">
-                        <thead>
-                          <tr>
-                            <th>Header Key</th>
-                            <th class="lastChild text-center">&nbsp;</th>
-                            <th>Header Value</th>
-                            <th class="lastChild">
-                              <a class="text-center" onclick="addHeaders(this);"><i class="fa fa-plus"></i></a>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td><input type="text" class="form-control headerKey" required></td>
-                            <td class="lastChild text-center">:</td>
-                            <td><input type="text" class="form-control headerValue" required></td>
-                            <td class="lastChild">
-                              <a class="text-center" onclick="removeHeaders(this);"><i class="fa fa-close"></i></a>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div class="form-group">
-                      <label>Max Trail:</label>
-                      <input type="number" name="maxTrail" id="maxTrail" class="form-control" placeholder="Enter Max Try...">
-                    </div>
-                    <div class="form-group">
-                      <label>Next Job ID:</label>
-                      <input type="text" name="njID" id="njID" class="form-control" placeholder="Enter Next Job ID...">
-                    </div>
                     <div class="row">
                       <div class="col-sm-6">
                         <div class="form-group">
@@ -197,7 +160,6 @@
                           <select name="type" id="type" class="form-control">
                             <option value="">-- Select --</option>
                             <option value="1">http</option>
-                            <option value="2">https</option>
                           </select>
                         </div>
                       </div>
@@ -233,9 +195,9 @@
                         </thead>
                         <tbody>
                           <tr>
-                            <td><input type="text" class="form-control headerKey" required></td>
+                            <td><input type="text" class="form-control headerKey"></td>
                             <td class="lastChild text-center">:</td>
-                            <td><input type="text" class="form-control headerValue" required></td>
+                            <td><input type="text" class="form-control headerValue"></td>
                             <td class="lastChild">
                               <a class="text-center" onclick="removeHeaders(this);"><i class="fa fa-close"></i></a>
                             </td>
@@ -272,6 +234,43 @@
                       </div>
                       <!-- /.input group -->
                     </div>
+                    <div class="form-group">
+                      <label>Audit Log URL:</label>
+                      <input type="text" name="auditUrl" id="auditUrl" class="form-control" placeholder="Enter Audit Log URL...">
+                    </div>
+                    <div class="form-group" id="auditHeaders">
+                      <label>Audit Log Headers:</label>
+                      <table class="table table-bordered" id="auditTable">
+                        <thead>
+                          <tr>
+                            <th>Header Key</th>
+                            <th class="lastChild text-center">&nbsp;</th>
+                            <th>Header Value</th>
+                            <th class="lastChild">
+                              <a class="text-center" onclick="addAuditHeaders(this);"><i class="fa fa-plus"></i></a>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><input type="text" class="form-control headerKey"></td>
+                            <td class="lastChild text-center">:</td>
+                            <td><input type="text" class="form-control headerValue"></td>
+                            <td class="lastChild">
+                              <a class="text-center" onclick="removeAuditHeaders(this);"><i class="fa fa-close"></i></a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="form-group">
+                      <label>Max Trail:</label>
+                      <input type="number" name="maxTrail" id="maxTrail" class="form-control" placeholder="Enter Max Trail...">
+                    </div>
+                    <div class="form-group">
+                      <label>Next Job ID:</label>
+                      <input type="text" name="njID" id="njID" class="form-control" placeholder="Enter Next Job ID...">
+                    </div>
                   </div>
                   <!-- /.box-body -->
                   <div class="box-footer">
@@ -296,30 +295,28 @@
     <!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery 1.12.4 -->
     <!-- <script src="../plugins/jQuery/jquery-1.12.4.min.js"></script> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../plugins/jQuery/jquery-1.12.4.min.js"><\/script>')</script>
+    <script src="/webjars/jquery/2.2.4/dist/jquery.min.js"></script>
     <!-- jQueryUI 1.11.4 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../plugins/jQueryUI/jquery-ui.min.js"><\/script>')</script>
+    <script src="/webjars/jquery-ui/1.11.4/jquery-ui.min.js"></script>
     <!-- Bootstrap 3.3.6 -->
-    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <script src="/webjars/adminlte/2.3.3/bootstrap/js/bootstrap.min.js"></script>
     <!-- DataTables -->
-    <script src="../plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="../plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="/webjars/adminlte/2.3.3/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/webjars/adminlte/2.3.3/plugins/datatables/dataTables.bootstrap.min.js"></script>
     <!-- DateTimePicker -->
     <script src="../plugins/datetimepicker/js/moment.min.js"></script>
     <script src="../plugins/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <!-- jQueryCron -->
     <script src="../plugins/jquery-cron/jquery-cron-min.js"></script>
     <!-- jQueryCron -->
-    <script src="../plugins/jquery-validation/jquery.validate.min.js"></script>
-    <script src="../plugins/jquery-validation/additional-methods.min.js"></script>
+    <script src="/webjars/jquery-validation/1.15.0/dist/jquery.validate.min.js"></script>
+    <script src="/webjars/jquery-validation/1.15.0/dist/additional-methods.min.js"></script>
     <!-- SlimScroll -->
-    <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <script src="/webjars/adminlte/2.3.3/plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="../plugins/fastclick/fastclick.js"></script>
+    <script src="/webjars/adminlte/2.3.3/plugins/fastclick/fastclick.js"></script>
     <!-- AdminLTE App -->
-    <script src="../dist/js/app.min.js"></script>
+    <script src="/webjars/adminlte/2.3.3/dist/js/app.min.js"></script>
     <!-- Custom JS -->
     <script src="../dist/js/main.js"></script>
   </body>
