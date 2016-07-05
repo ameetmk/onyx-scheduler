@@ -49,3 +49,14 @@ table#auditTable>tbody>tr>td.lastChild>a {
   color: #000;
   font-size: 30px;
 }
+.generateCron {
+	position: relative;
+}
+.generateCron>a.icon-edit {
+	position: absolute;
+	right: 10px;
+	top:9px;
+}
+.fixed .main-header {
+	z-index: 9999;
+}

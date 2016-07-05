@@ -55,22 +55,8 @@ $(function() {
   }
 
   //jQueryCron
-  var cronVal;
   if ($('.generateCron').exists()) {
-    $('#generateCron').cron({
-      initial: "*/2 * * * *",
-      customValues: {
-        "2 Minutes": "*/2 * * * *",
-      },
-      onChange: function() {
-        cronVal = $(this).cron("value");
-      }
-    });
-    $('#generateCron select').addClass('form-control').css({
-      'width': 'auto',
-      'display': 'inline',
-      'margin': '0 5px'
-    });
+	  $("#cron").cronGen(); 
   }
 
   //DateTime picker
@@ -158,7 +144,7 @@ $(function() {
         }
         if ($('select#triggers').val() == 2) {
           data['triggers'] = [{
-            "cron": cronVal + ' ?'
+            "cron": $('#cron').val()
           }];
         } else if ($('select#triggers').val() == 3) {
           var dateTime = $('#when').val(),
