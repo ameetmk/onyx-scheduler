@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+	<property name = "ONYX_LOG_HOME" value = "/data/logs/onyx" />
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ROLLING"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		 <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        	<level>WARN</level>
+    	</filter>
+		<file>${ONYX_LOG_HOME}/onyx.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${ONYX_LOG_HOME}/onyx-%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<maxFileSize>20MB</maxFileSize>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>20GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+
+	<root level="INFO">
+		<appender-ref ref="ROLLING" />
+		<appender-ref ref="STDOUT" />
+	</root>
+	
+
+</configuration>
