@@ -16,6 +16,11 @@
 
 package com.onyxscheduler;
 
+import static com.google.common.collect.Lists.newArrayList;
+
+import java.util.Properties;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -26,6 +31,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,7 +52,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-import static com.google.common.collect.Lists.newArrayList;
 
 @Configuration
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
@@ -53,6 +59,28 @@ import static com.google.common.collect.Lists.newArrayList;
 @EnableSwagger2
 public class OnyxSchedulerApplication {
 
+	@Value("${mail.username}")
+	private String emailUsername;
+	
+	@Value("${mail.password}")
+	private String emailPassword;
+	
+	@Value("${mail.host}")
+	private String host;
+	
+	@Value("${mail.port}")
+	private int port;
+	
+	@Value("${mail.smtp.startTls.enable}")
+	private String startTlsEnable;
+	
+	@Value("${mail.smtp.startTls.required}")
+	private String startTlsRequired;
+	
+	@Value("${mail.smtp.auth}")
+	private String smtpAuth;
+	
+	
   public static void main(String[] args) {
     SpringApplication.run(OnyxSchedulerApplication.class, args);
   }
@@ -117,4 +145,20 @@ public class OnyxSchedulerApplication {
   			return apiInfo;
   		}
   		
+  		@Bean
+  		public JavaMailSender mailSender() {
+  			
+  			JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+  			mailSender.setHost(host);
+  			mailSender.setPort(port);
+  			mailSender.setUsername(emailUsername);
+  			mailSender.setPassword(emailPassword);
+  			Properties props = new Properties();
+  			props.put("mail.smtp.starttls.enable",startTlsEnable);
+  			props.put("mail.smtp.auth", smtpAuth);
+  			props.put("mail.smtp.starttls.required", startTlsRequired);
+  			mailSender.setJavaMailProperties(props);
+  			
+  			return mailSender;
+  		}
 }

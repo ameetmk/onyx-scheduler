@@ -16,13 +16,17 @@
 
 package com.onyxscheduler.domain;
 
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableMap;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,15 +37,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableMap;
+import com.onyxscheduler.CustomMailSender;
 
 /**
  * Job which executes http requests logging their response when they are done. <p/> Currently no
@@ -76,6 +79,9 @@ public class HttpJob extends Job {
   @SuppressWarnings("SpringJavaAutowiredMembersInspection")
   @Autowired
   private RestTemplate restTemplate;
+  
+  @Autowired
+  private CustomMailSender mailSender;
 
   @JsonIgnore
   private ObjectMapper jsonMapper = new ObjectMapper();
@@ -258,7 +264,10 @@ public class HttpJob extends Job {
       try {
     	  maxTrial= (Integer.valueOf(dataMap.get(MAX_TRIAL).toString()));  
       }catch(Exception e) {
-    	  // eat this exception and set maxTrial to 1
+    	  
+    	  StringWriter errors = new StringWriter();
+    	  e.printStackTrace(new PrintWriter(errors));
+    	  mailSender.sendEmail(false, "DataMap Init Failed : "+ this.url.toString(), this.group, 0 ,errors.toString());
     	  maxTrial = 1;
       }
     }
@@ -269,6 +278,10 @@ public class HttpJob extends Job {
 	  try {
 		  makeRequest(1);
 	  } catch (Throwable e) {
+		  
+		  StringWriter errors = new StringWriter();
+    	  e.printStackTrace(new PrintWriter(errors));
+    	  mailSender.sendEmail(false, this.url.toString(), this.group, 1 , errors.toString());
 		  LOG.error("Failed to trigger the job, retrying", e);
 	  }
 	  
@@ -290,7 +303,11 @@ public class HttpJob extends Job {
 
 		try {
 				response = restTemplate.exchange(url.toString(), method, request, String.class);
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			
+			 StringWriter errors = new StringWriter();
+	    	 e.printStackTrace(new PrintWriter(errors));
+	    	 mailSender.sendEmail(false, this.url.toString(), this.group, trialCount , errors.toString());
 			LOG.error("Failed to trigger rest endpoint for trial#: " + trialCount, e);
 			makeRequest(++trialCount);
 		}
@@ -316,9 +333,16 @@ public class HttpJob extends Job {
 				try {
 						jsonMapper.setVisibility(PropertyAccessor.ALL,Visibility.ANY);
 						HttpEntity<String> auditRequest = new HttpEntity<>(jsonMapper.writeValueAsString(httpAuditRecord), httpHeaders);
-						restTemplate.exchange(auditUrl.toURI(),HttpMethod.POST,auditRequest, String.class);
+						ResponseEntity<String>responseEntity =  restTemplate.exchange(auditUrl.toURI(),HttpMethod.POST,auditRequest, String.class);
+						LOG.info("Job completed");
+						mailSender.sendEmail(true, this.url.toString(), this.group, trialCount , responseEntity.getBody());
 				} catch (Exception e) {
-					LOG.error("Error Logging Audit Record to Log Server Endpoint", e);
+					
+					 StringWriter errors = new StringWriter();
+			    	  e.printStackTrace(new PrintWriter(errors));
+					  mailSender.sendEmail(false, this.url.toString(), this.group, trialCount , errors.toString());
+					
+					  LOG.error("Error Logging Audit Record to Log Server Endpoint", e);
 				}
 			}
 		}
@@ -368,4 +392,5 @@ public class HttpJob extends Job {
         .add("maxTrial", maxTrial)
         .toString();
   }
+  
 }

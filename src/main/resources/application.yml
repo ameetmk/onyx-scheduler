@@ -13,6 +13,19 @@ security:
 quartz:
   threadCount: 15
 
+mail:
+  to: test@test.com,test2@test.com,test3@test.com
+  host: smtp.gmail.com
+  port: 587
+  username: test.test@gmail.com
+  password: test
+  smtp:
+   startTls:
+    enable: true
+    required: true
+   auth: true
+
+  
 ---
 
 quartz:
