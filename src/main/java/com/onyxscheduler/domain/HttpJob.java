@@ -303,6 +303,7 @@ public class HttpJob extends Job {
 
 		try {
 				response = restTemplate.exchange(url.toString(), method, request, String.class);
+				mailSender.sendEmail(true, this.url.toString(), this.group, trialCount , response.getBody());
 		} catch (Throwable e) {
 			
 			 StringWriter errors = new StringWriter();
